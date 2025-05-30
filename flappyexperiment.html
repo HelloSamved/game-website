@@ -138,21 +138,40 @@
         };
         
         // Initialize game
-        function init() {
-            canvas = document.getElementById('gameCanvas');
-            ctx = canvas.getContext('2d');
-            
-            // Event listeners
-            document.addEventListener('keydown', handleKeyPress);
-            canvas.addEventListener('click', handleClick);
-            
-            // Update UI
-            updateUI();
-            
-            // Start game loop
-            gameLoop();
+                function init() {
+                canvas = document.getElementById('gameCanvas');
+                ctx = canvas.getContext('2d');
+
+                resizeCanvas(); // set canvas size on load
+                window.addEventListener('resize', resizeCanvas); // responsive
+
+                document.addEventListener('keydown', handleKeyPress);
+                canvas.addEventListener('click', handleClick);
+
+                updateUI();
+                gameLoop();
         }
-        
+
+        function resizeCanvas() {
+            const ratio = 4 / 3; // or keep your original 800/600 ratio = 1.333
+
+            let width = window.innerWidth * 0.95;
+            let height = width / ratio;
+
+            // Cap the height to screen height if needed
+            if (height > window.innerHeight * 0.95) {
+                height = window.innerHeight * 0.95;
+                width = height * ratio;
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+
+            // Update global vars if you use them in draw functions
+            CANVAS_WIDTH = width;
+            CANVAS_HEIGHT = height;
+        }
+
         function handleKeyPress(event) {
             if (event.code === 'Space') {
                 event.preventDefault();

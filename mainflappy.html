@@ -378,7 +378,7 @@
             // Bird body
             ctx.fillStyle = birdColor;
             ctx.beginPath();
-            ctx.arc(0, 0, bird.radius, 0, Math.PI * 2);
+            ctx.ellipse(-1, 1, 15, 15, 0, 0, Math.PI * 2);
             ctx.fill();
             
             // Bird outline
@@ -389,7 +389,7 @@
             // Wing
             ctx.fillStyle = birdWingColor;
             ctx.beginPath();
-            ctx.ellipse(-8, wingOffset, 8, 12, 0, 0, Math.PI * 2);
+            ctx.ellipse(-8, 2, 7, 11, 0, 0, Math.PI * 2);
             ctx.fill();
             ctx.strokeStyle = birdOutlineColor;
             ctx.lineWidth = 1;
@@ -398,7 +398,7 @@
             // Bird eye
             ctx.fillStyle = '#FFF';
             ctx.beginPath();
-            ctx.arc(3, -5, 4, 0, Math.PI * 2);
+            ctx.arc(6, -5, 4, 0, Math.PI * 2);
             ctx.fill();
             
             ctx.fillStyle = '#000';
@@ -483,16 +483,56 @@
             // Grass
             ctx.fillStyle = '#32CD32';
             ctx.fillRect(0, CANVAS_HEIGHT - GROUND_HEIGHT, CANVAS_WIDTH, 10);
+
+            //Grass blades
+            ctx.fillstyle= 'forestgreen'
+            
+
         }
         
+        
         function drawBackground() {
+            const now = new Date();
+            const hour = now.getHours();
+            const minute = now.getMinutes();
+
             // Sky gradient
             const gradient = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
-            gradient.addColorStop(0, '#87CEEB');
-            gradient.addColorStop(1, '#98FB98');
+            if (hour >= 6 && hour < 18) {
+                // Day
+                gradient.addColorStop(0, '#87CEEB'); // light blue
+                gradient.addColorStop(1, '#98FB98'); // greenish
+            } else {
+                // Night
+                gradient.addColorStop(0, '#0D1B2A'); // dark blue
+                gradient.addColorStop(1, '#1B263B'); // darker blue
+            }
+
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-            
+
+            // ☀️ Sun (6 AM - 6 PM)
+            if (hour >= 6 && hour < 18) {
+                const totalMinutes = (hour - 6) * 60 + minute;
+                const x = (totalMinutes / (12 * 60)) * CANVAS_WIDTH;
+                const y = 100 - 40 * Math.sin((Math.PI * totalMinutes) / (12 * 60));
+                ctx.fillStyle = '#FFD700';
+                ctx.beginPath();
+                ctx.arc(x, y + 50, 30, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // 🌙 Moon (6 PM - 6 AM)
+            else {
+                const nightMinutes = ((hour >= 18 ? hour - 18 : hour + 6) * 60 + minute);
+                const x = (nightMinutes / (12 * 60)) * CANVAS_WIDTH;
+                const y = 100 - 40 * Math.sin((Math.PI * nightMinutes) / (12 * 60));
+                ctx.fillStyle = 'white';
+                ctx.beginPath();
+                ctx.arc(x, y+25, 25, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
             // Clouds
             ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
             const clouds = [
@@ -500,7 +540,6 @@
                 { x: 300, y: 120 },
                 { x: 600, y: 90 }
             ];
-            
             clouds.forEach(cloud => {
                 ctx.beginPath();
                 ctx.arc(cloud.x, cloud.y, 20, 0, Math.PI * 2);
@@ -510,9 +549,10 @@
                 ctx.fill();
             });
         }
-        
-        // Start the game when page loads
-        window.addEventListener('load', init);
-    </script>
+
+
+window.addEventListener('load', init);
+
+</script>
 </body>
 </html>

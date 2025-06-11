@@ -498,11 +498,16 @@
 
             // Sky gradient
             const gradient = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
-            if (hour >= 6 && hour < 18) {
+            if (hour >= 6 && hour < 17) {
                 // Day
                 gradient.addColorStop(0, '#87CEEB'); // light blue
                 gradient.addColorStop(1, '#98FB98'); // greenish
-            } else {
+            }else if(hour >= 17 && hour < 18.5) {
+                // Evening
+                gradient.addColorStop(0, 'orange'); // orange
+                gradient.addColorStop(1, 'lightblue'); // lightblue
+            }
+            else {
                 // Night
                 gradient.addColorStop(0, '#0D1B2A'); // dark blue
                 gradient.addColorStop(1, '#1B263B'); // darker blue
